@@ -19,3 +19,10 @@ fn validator_handles_valid_input() {
     assert!(NonEmptyStringValidator::is_valid(&input) == expected_result);
 }
 
+#[test]
+fn imperative_validator_handles_invalid_input() {
+    let input = String::new();
+    let expected_result = false;
+
+    assert!(NonEmptyStringValidator::is_valid(&input) == expected_result);
+}
