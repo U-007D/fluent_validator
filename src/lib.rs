@@ -20,3 +20,15 @@ pub fn lib_main(_args: Vec<String>) -> Result<()>
 pub trait Validator<T> {
     fn is_valid(value: &T) -> bool;
 }
+
+pub trait FluentValidator {
+    fn validate<T>(self, validator: T) -> Option<Self> where T: Validator<Self>,
+                                                             Self: Sized {
+        match T::is_valid(&self) {
+            true => Some(self),
+            false => None,
+        }
+    }
+}
+
+impl<T> FluentValidator for T {}

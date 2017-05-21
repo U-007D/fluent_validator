@@ -26,3 +26,11 @@ fn imperative_validator_handles_invalid_input() {
 
     assert!(NonEmptyStringValidator::is_valid(&input) == expected_result);
 }
+
+#[test]
+fn fluent_validator_handles_valid_input() {
+    let input = "non-empty test value".to_string();
+    let expected_result = Some(input.clone());
+
+    assert!(input.validate(NonEmptyStringValidator) == expected_result);
+}
