@@ -18,7 +18,7 @@ pub fn lib_main(_args: Vec<String>) -> Result<()>
 }
 
 pub trait Validator<T> {
-    fn is_valid(value: &T) -> bool;
+    fn is_valid(value: T) -> bool;
 }
 
 pub trait FluentValidator {
