@@ -12,13 +12,8 @@ use consts::msgs;
 #[cfg(test)]
 mod unit_tests;
 
-pub fn lib_main(_args: Vec<String>) -> Result<()>
-{
-    Ok(())
-}
-
 pub trait Validator<T> {
-    fn is_valid(value: T) -> bool;
+    fn is_valid(value: &T) -> bool;
 }
 
 pub trait FluentValidator {
@@ -32,3 +27,8 @@ pub trait FluentValidator {
 }
 
 impl<T> FluentValidator for T {}
+
+pub fn lib_main(_args: Vec<String>) -> Result<()>
+{
+    Ok(())
+}
