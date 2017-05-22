@@ -5,15 +5,15 @@
 #![deny(unused_must_use, overflowing_literals)]
 
 mod consts;
-use consts::msgs;
 
 #[cfg(test)]
 mod unit_tests;
 
 type GeneralError = Box<std::error::Error>;
-type GeneralResult<T> = std::result::Result<T, GeneralError>;
-type ValidatorResult<T> = std::result::Result<T, Error>;
+type GeneralResult<T> = Result<T, GeneralError>;
+type ValidatorResult<T> = Result<T, Error>;
 
+#[derive(Debug, PartialEq, Eq)]
 pub enum Error {
     FailedConstraint(String),
 }
