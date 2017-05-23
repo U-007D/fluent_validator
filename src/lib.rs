@@ -8,7 +8,7 @@ mod consts;
 
 #[cfg(test)] mod unit_tests;
 
-type ValidatorResult<T> = Result<T, Error>;
+type Result<T> = std::result::Result<T, Error>;
 
 #[derive(Debug, PartialEq, Eq)]
 pub enum Error {
@@ -16,10 +16,15 @@ pub enum Error {
 }
 
 pub trait Validator<T> {
-    fn validate(T) -> Result<Self, Error> where Self: Sized;
+    fn validate(T) -> Result<Self> where Self: Sized;
 }
 
 pub trait FluentValidator: Sized {
-    fn validate<T: Validator<Self>>(self) -> ValidatorResult<T>;
+    fn validate<T: Validator<Self>>(self) -> Result<T>;
 }
 
+impl<T> FluentValidator for T {
+    fn validate<U: Validator<T>>(self) -> Result<U> {
+        U::validate(self)
+    }
+}
