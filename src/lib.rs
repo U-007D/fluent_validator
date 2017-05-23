@@ -5,7 +5,6 @@
 #![deny(unused_must_use, overflowing_literals)]
 
 mod consts;
-use consts::*;
 
 #[cfg(test)] mod unit_tests;
 
@@ -29,41 +28,6 @@ trait FluentValidator: Sized {
 impl<T> FluentValidator for T {
     fn validate<U: Validator<T>>(self) -> ValidatorResult<U> {
         U::validate(self)
-    }
-}
-
-//TODO: Place Validator impls into their own crate (their dependencies will bloat core framework)
-#[derive(Debug, PartialEq, Eq)]
-struct HexByteStrValidator<'a> {
-    value: &'a str,
-}
-
-impl<'a> Validator<&'a str> for HexByteStrValidator<'a> {
-    fn validate(v: &'a str) -> ValidatorResult<Self> where Self: Sized {
-        match None
-                .or_else(
-                    || match !v.is_empty() {
-                        true => None,
-                        false => Some(Error::FailedConstraint(VE_EMPTY_VALUE.to_string())),
-                    })
-                .or_else(
-                    || match v.chars().all(|c| match c {
-                                                   '0'...'9' |
-                                                   'a'...'f' |
-                                                   'A'...'F' => true,
-                                                   _ => false,
-                                               }) {
-                        true => None,
-                        false => Some(Error::FailedConstraint(VE_INVALID_HEX_DIGIT.to_string())),
-                    })
-                .or_else(
-                    || match v.chars().count() % 2 == 0 {
-                        true => None,
-                        false => Some(Error::FailedConstraint(VE_ODD_NUMBER_OF_HEX_DIGITS.to_string())),
-                    }) {
-            None => Ok(HexByteStrValidator { value: v }),
-            Some(e) => Err(e),
-        }
     }
 }
 

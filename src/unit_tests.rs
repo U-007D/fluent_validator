@@ -1,5 +1,7 @@
 use super::*;
 
+const VE_EMPTY_VALUE: &'static str              = "Value is empty.";
+
 #[derive(Debug, PartialEq, Eq)]
 struct NonEmptyStringValidator {
     value: String,
@@ -31,36 +33,4 @@ fn string_validator_handles_empty_input() {
     let expected_result = Some(Error::FailedConstraint(VE_EMPTY_VALUE.to_string()));
 
     assert_eq!(input.validate::<NonEmptyStringValidator>().err(), expected_result);
-}
-
-#[test]
-fn hex_byte_str_validator_handles_empty_input() {
-    let input = "";
-    let expected_result = Some(Error::FailedConstraint(VE_EMPTY_VALUE.to_string()));
-
-    assert_eq!(input.validate::<HexByteStrValidator>().err(), expected_result);
-}
-
-#[test]
-fn hex_byte_str_validator_handles_valid_hex_input() {
-    let input = "0123456789abcdefABCDEF";
-    let expected_result = Some(HexByteStrValidator{ value: input.clone() });
-
-    assert_eq!(input.validate::<HexByteStrValidator>().ok(), expected_result);
-}
-
-#[test]
-fn hex_byte_str_validator_handles_invalid_hex_input() {
-    let input = "0123456789xxabcdefABCDEF";
-    let expected_result = Some(Error::FailedConstraint(VE_INVALID_HEX_DIGIT.to_string()));
-
-    assert_eq!(input.validate::<HexByteStrValidator>().err(), expected_result);
-}
-
-#[test]
-fn hex_byte_str_validator_handles_odd_length_hex_input() {
-    let input = "0123456789abcdefABCDE";
-    let expected_result = Some(Error::FailedConstraint(VE_ODD_NUMBER_OF_HEX_DIGITS.to_string()));
-
-    assert_eq!(input.validate::<HexByteStrValidator>().err(), expected_result);
 }
