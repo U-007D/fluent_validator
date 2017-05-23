@@ -18,8 +18,18 @@ pub enum Error {
     FailedConstraint(String),
 }
 
-pub trait Validator {
-    fn validate(self) -> ValidatorResult<Self> where Self: Sized;
+pub trait Validate<T> {
+    fn is_valid(T) -> Result<Self, Error> where Self: Sized;
+}
+
+trait Validator: Sized {
+    fn validate<T: Validate<Self>>(self) -> ValidatorResult<T>;
+}
+
+impl<T> Validator for T {
+    fn validate<U: Validate<T>>(self) -> ValidatorResult<U> {
+        U::validate(self)
+    }
 }
 
 pub fn lib_main(_args: Vec<String>) -> GeneralResult<()>

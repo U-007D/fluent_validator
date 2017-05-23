@@ -1,11 +1,14 @@
 use super::*;
 
-//struct NonEmptyStringValidator;
+#[derive(Debug, PartialEq, Eq)]
+struct NonEmptyStringValidator {
+    value: String,
+}
 
-impl Validator for String {
-    fn validate(self) -> ValidatorResult<Self> where Self: Sized {
-        match !self.is_empty() {
-            true => Ok(self),
+impl Validate<String> for NonEmptyStringValidator {
+    fn is_valid(v: String) -> ValidatorResult<NonEmptyStringValidator> where Self: Sized {
+        match !v.is_empty() {
+            true => Ok(NonEmptyStringValidator { value: v }),
             false => Err(Error::FailedConstraint("Value is empty.".to_string())),
         }
     }
@@ -17,7 +20,7 @@ fn empty_test() {}
 #[test]
 fn validator_handles_non_empty_input() {
     let input = "non-empty test value".to_string();
-    let expected_result = Some(input.clone());
+    let expected_result = Some(NonEmptyStringValidator { value: input.clone() });
 
     assert!(input.validate().ok() == expected_result);
 }
@@ -27,7 +30,7 @@ fn imperative_validator_handles_invalid_input() {
     let input = String::new();
     let expected_result = Some(Error::FailedConstraint("Value is empty.".to_string()));
 
-    assert!(input.validate().err() ==  expected_result);
+    assert!(input.validate::<NonEmptyStringValidator>().err() ==  expected_result);
 }
 
 //#[test]
