@@ -19,13 +19,7 @@ pub trait Validator<T> {
     fn validate(T) -> Result<Self, Error> where Self: Sized;
 }
 
-trait FluentValidator: Sized {
+pub trait FluentValidator: Sized {
     fn validate<T: Validator<Self>>(self) -> ValidatorResult<T>;
-}
-
-impl<T> FluentValidator for T {
-    fn validate<U: Validator<T>>(self) -> ValidatorResult<U> {
-        U::validate(self)
-    }
 }
 
