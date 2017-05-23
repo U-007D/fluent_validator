@@ -18,7 +18,7 @@ pub enum Error {
 }
 
 pub trait Validator<T> {
-    fn is_valid(T) -> Result<Self, Error> where Self: Sized;
+    fn validate(T) -> Result<Self, Error> where Self: Sized;
 }
 
 trait FluentValidator: Sized {
@@ -27,7 +27,7 @@ trait FluentValidator: Sized {
 
 impl<T> FluentValidator for T {
     fn validate<U: Validator<T>>(self) -> ValidatorResult<U> {
-        U::is_valid(self)
+        U::validate(self)
     }
 }
 
@@ -38,7 +38,7 @@ struct HexByteStrValidator<'a> {
 }
 
 impl<'a> Validator<&'a str> for HexByteStrValidator<'a> {
-    fn is_valid(v: &'a str) -> Result<Self, Error> where Self: Sized {
+    fn validate(v: &'a str) -> Result<Self, Error> where Self: Sized {
         match [
             || match !v.is_empty() {
                 true => Ok(()),

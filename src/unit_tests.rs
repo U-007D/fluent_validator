@@ -6,7 +6,7 @@ struct NonEmptyStringValidator {
 }
 
 impl Validator<String> for NonEmptyStringValidator {
-    fn is_valid(v: String) -> ValidatorResult<NonEmptyStringValidator> where Self: Sized {
+    fn validate(v: String) -> ValidatorResult<NonEmptyStringValidator> where Self: Sized {
         match !v.is_empty() {
             true => Ok(NonEmptyStringValidator { value: v }),
             false => Err(Error::FailedConstraint("Value is empty.".to_string())),
