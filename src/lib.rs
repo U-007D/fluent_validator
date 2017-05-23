@@ -8,8 +8,6 @@ mod consts;
 
 #[cfg(test)] mod unit_tests;
 
-#[allow(dead_code)] type GeneralError = Box<std::error::Error>;
-#[allow(dead_code)] type GeneralResult<T> = Result<T, GeneralError>;
 type ValidatorResult<T> = Result<T, Error>;
 
 #[derive(Debug, PartialEq, Eq)]
