@@ -39,9 +39,14 @@ struct HexByteStrValidator<'a> {
 
 impl<'a> Validator<&'a str> for HexByteStrValidator<'a> {
     fn is_valid(v: &'a str) -> Result<Self, Error> where Self: Sized {
-        match !v.is_empty() {
-            true => Ok(HexByteStrValidator { value: v }),
-            false => Err(Error::FailedConstraint("Value is empty.".to_string())),
+        match [
+            || match !v.is_empty() {
+                true => Ok(()),
+                false => Err(Error::FailedConstraint("Value is empty.".to_string())),
+            },
+        ].into_iter().find(|&rule| rule().is_err()) {
+            None => Ok(HexByteStrValidator { value: v }),
+            Some(e) => Err(e().unwrap_err()),
         }
     }
 }

@@ -34,7 +34,7 @@ fn string_validator_handles_empty_input() {
 }
 
 #[test]
-fn str_validator_handles_non_empty_input() {
+fn hex_byte_str_validator_handles_non_empty_input() {
     let input = "non-empty test value";
     let expected_result = Some(HexByteStrValidator { value: input.clone() });
 
@@ -42,7 +42,7 @@ fn str_validator_handles_non_empty_input() {
 }
 
 #[test]
-fn str_validator_handles_empty_input() {
+fn hex_byte_str_validator_handles_empty_input() {
     let input = "";
     let expected_result = Some(Error::FailedConstraint("Value is empty.".to_string()));
 
