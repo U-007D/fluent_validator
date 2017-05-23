@@ -5,7 +5,7 @@ struct NonEmptyStringValidator {
     value: String,
 }
 
-impl Validate<String> for NonEmptyStringValidator {
+impl Validator<String> for NonEmptyStringValidator {
     fn is_valid(v: String) -> ValidatorResult<NonEmptyStringValidator> where Self: Sized {
         match !v.is_empty() {
             true => Ok(NonEmptyStringValidator { value: v }),
@@ -18,7 +18,7 @@ impl Validate<String> for NonEmptyStringValidator {
 fn empty_test() {}
 
 #[test]
-fn validator_handles_non_empty_input() {
+fn string_validator_handles_non_empty_input() {
     let input = "non-empty test value".to_string();
     let expected_result = Some(NonEmptyStringValidator { value: input.clone() });
 
@@ -26,17 +26,26 @@ fn validator_handles_non_empty_input() {
 }
 
 #[test]
-fn imperative_validator_handles_invalid_input() {
+fn string_validator_handles_empty_input() {
     let input = String::new();
     let expected_result = Some(Error::FailedConstraint("Value is empty.".to_string()));
 
     assert!(input.validate::<NonEmptyStringValidator>().err() ==  expected_result);
 }
 
-//#[test]
-//fn fluent_validator_handles_valid_input() {
-//    let input = "non-empty test value".to_string();
-//    let expected_result = Some(input.clone());
-//
-//    assert!(input.validate(NonEmptyStringValidator) == expected_result);
-//}
+#[test]
+fn str_validator_handles_non_empty_input() {
+    let input = "non-empty test value";
+    let expected_result = Some(HexByteStrValidator { value: input.clone() });
+
+    assert!(input.validate().ok() == expected_result);
+}
+
+#[test]
+fn str_validator_handles_empty_input() {
+    let input = "";
+    let expected_result = Some(Error::FailedConstraint("Value is empty.".to_string()));
+
+    assert!(input.validate::<HexByteStrValidator>().err() ==  expected_result);
+}
+

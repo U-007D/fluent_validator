@@ -6,11 +6,10 @@
 
 mod consts;
 
-#[cfg(test)]
-mod unit_tests;
+#[cfg(test)] mod unit_tests;
 
-type GeneralError = Box<std::error::Error>;
-type GeneralResult<T> = Result<T, GeneralError>;
+#[allow(dead_code)] type GeneralError = Box<std::error::Error>;
+#[allow(dead_code)] type GeneralResult<T> = Result<T, GeneralError>;
 type ValidatorResult<T> = Result<T, Error>;
 
 #[derive(Debug, PartialEq, Eq)]
@@ -18,21 +17,32 @@ pub enum Error {
     FailedConstraint(String),
 }
 
-pub trait Validate<T> {
+pub trait Validator<T> {
     fn is_valid(T) -> Result<Self, Error> where Self: Sized;
 }
 
-trait Validator: Sized {
-    fn validate<T: Validate<Self>>(self) -> ValidatorResult<T>;
+trait FluentValidator: Sized {
+    fn validate<T: Validator<Self>>(self) -> ValidatorResult<T>;
 }
 
-impl<T> Validator for T {
-    fn validate<U: Validate<T>>(self) -> ValidatorResult<U> {
-        U::validate(self)
+impl<T> FluentValidator for T {
+    fn validate<U: Validator<T>>(self) -> ValidatorResult<U> {
+        U::is_valid(self)
     }
 }
 
-pub fn lib_main(_args: Vec<String>) -> GeneralResult<()>
-{
-    Ok(())
+//TODO: Place Validator impls into their own crate (their dependencies will bloat core framework)
+#[derive(Debug, PartialEq, Eq)]
+struct HexByteStrValidator<'a> {
+    value: &'a str,
 }
+
+impl<'a> Validator<&'a str> for HexByteStrValidator<'a> {
+    fn is_valid(v: &'a str) -> Result<Self, Error> where Self: Sized {
+        match !v.is_empty() {
+            true => Ok(HexByteStrValidator { value: v }),
+            false => Err(Error::FailedConstraint("Value is empty.".to_string())),
+        }
+    }
+}
+
