@@ -5,6 +5,7 @@
 #![deny(unused_must_use, overflowing_literals)]
 
 mod consts;
+use consts::*;
 
 #[cfg(test)] mod unit_tests;
 
@@ -39,14 +40,22 @@ struct HexByteStrValidator<'a> {
 
 impl<'a> Validator<&'a str> for HexByteStrValidator<'a> {
     fn validate(v: &'a str) -> ValidatorResult<Self> where Self: Sized {
-        match [
+        match None.or_else(
             || match !v.is_empty() {
                 true => None,
-                false => Some(Error::FailedConstraint("Value is empty.".to_string())),
-            },
-        ].into_iter().find(|&rule| rule().is_some()) {
+                false => Some(Error::FailedConstraint(VE_EMPTY_VALUE.to_string())),
+            }).or_else(
+                || match v.chars().all(|c| match c {
+                                               '0'...'9' |
+                                               'a'...'f' |
+                                               'A'...'F' => true,
+                                               _ => false,
+                                           }) {
+                    true => None,
+                    false => Some(Error::FailedConstraint(VE_INVALID_HEX_DIGIT.to_string()))
+            }) {
             None => Ok(HexByteStrValidator { value: v }),
-            Some(e) => Err(e().unwrap()),
+            Some(e) => Err(e),
         }
     }
 }
