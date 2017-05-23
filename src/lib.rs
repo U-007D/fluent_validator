@@ -5,15 +5,11 @@
 #![deny(unused_must_use, overflowing_literals)]
 
 mod consts;
+use consts::*;
 
 #[cfg(test)] mod unit_tests;
 
 type Result<T> = std::result::Result<T, Error>;
-
-#[derive(Debug, PartialEq, Eq)]
-pub enum Error {
-    FailedConstraint(String),
-}
 
 pub trait Validator<T> {
     fn validate(T) -> Result<Self> where Self: Sized;
