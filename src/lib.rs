@@ -5,9 +5,16 @@
 #![deny(unused_must_use, overflowing_literals)]
 
 mod consts;
-use consts::*;
 
 #[cfg(test)] mod unit_tests;
+
+
+#[derive(Debug, PartialEq, Eq)]
+pub enum Error {
+    EmptyValue(String),
+    IllegalValue(String),
+    InvalidSize(String),
+}
 
 type Result<T> = std::result::Result<T, Error>;
 
