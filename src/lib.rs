@@ -18,16 +18,16 @@ pub enum Error {
 
 type Result<T> = std::result::Result<T, Error>;
 
-pub trait Validator<T> {
-    fn validate(T) -> Result<Self> where Self: Sized;
+pub trait Validator<GT> {
+    fn validate(GT) -> Result<GT> where Self: Sized;
 }
 
 pub trait FluentValidator: Sized {
-    fn validate<T: Validator<Self>>(self) -> Result<T>;
+    fn validate<CT: Validator<Self>>(self) -> Result<Self> where Self: Sized;
 }
 
-impl<T> FluentValidator for T {
-    fn validate<U: Validator<T>>(self) -> Result<U> {
-        U::validate(self)
+impl<CT> FluentValidator for CT {
+    fn validate<VT: Validator<CT>>(self) -> Result<Self> where Self: Sized {
+        VT::validate(self)
     }
 }

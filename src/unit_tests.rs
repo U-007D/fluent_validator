@@ -8,9 +8,9 @@ struct NonEmptyStringValidator {
 }
 
 impl Validator<String> for NonEmptyStringValidator {
-    fn validate(v: String) -> Result<NonEmptyStringValidator> where Self: Sized {
+    fn validate(v: String) -> Result<String> {
         match !v.is_empty() {
-            true => Ok(NonEmptyStringValidator { value: v }),
+            true => Ok(v),
             false => Err(Error::EmptyValue(VAL_ERR_EMPTY_VALUE.to_string())),
         }
     }
@@ -22,7 +22,7 @@ fn empty_test() {}
 #[test]
 fn string_validator_handles_non_empty_input() {
     let input = "non-empty test value".to_string();
-    let expected_result = Some(NonEmptyStringValidator { value: input.clone() });
+    let expected_result = Some(input.clone());
 
     assert_eq!(input.validate::<NonEmptyStringValidator>().ok(), expected_result);
 }
