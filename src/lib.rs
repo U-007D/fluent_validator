@@ -8,7 +8,6 @@ mod consts;
 
 #[cfg(test)] mod unit_tests;
 
-
 #[derive(Debug, PartialEq, Eq)]
 pub enum Error {
     EmptyValue(String),
