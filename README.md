@@ -3,7 +3,7 @@ Implement `Validator` to get a static (compile-time-optimized) validator usable 
 *** Sample 3-stage validator ***
 
 Mutating validators require owning datatypes (eg. String):
-```
+```rust
 impl Validator<String> for Base64ByteString {
     fn validate(value: String) -> Result<String> {
         Ok(value)
@@ -31,7 +31,7 @@ impl Validator<String> for Base64ByteString {
 ```
 
 Non-mutating validators can use any datatypes:
-```
+```rust
 impl<T: AsRef<str>> Validator<T> for HexByteString {
     fn validate(value: T) -> Result<T> {
         Ok(value.as_ref())
@@ -60,7 +60,7 @@ impl<T: AsRef<str>> Validator<T> for HexByteString {
 ```
 
 Invoke validators as follows:
-```
+```rust
 let hex_value = "123456";
 let base_64_value = "123456";
 
