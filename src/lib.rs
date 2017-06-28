@@ -10,7 +10,7 @@ mod error;
 #[cfg(test)] mod unit_tests;
 
 pub use self::error::Error;
-type Result<T> = std::result::Result<T, Error>;
+pub type Result<T> = std::result::Result<T, Error>;
 
 pub trait Validator<T> {
     fn validate(T) -> Result<T>;
