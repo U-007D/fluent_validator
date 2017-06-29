@@ -2,6 +2,8 @@
 name = "fluent_validator"
 version = "0.1.0"
 authors = ["bRad <brad@humanenginuity.com>"]
+description = "Static (compile-time-optimized) validator usable both with method-syntax and function-syntax styles."
+license = "MIT/Apache-2.0"
 
 [dependencies]
 
